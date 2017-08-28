@@ -106,53 +106,69 @@ class Yahtzee:
         """Calculates the current score.
         
         There are boni for getting more than 63 points in the upper section and multiple Yahtzees including the Yahtzee box
+
+        Returns:
+        A list with 16 integers.
+        Index 0-12 are the same as in the score card.
+        Index 13 and 14 are upper section bonus and Yahtzee bonus respectively.
+        Index 15 is the total sum.
         """
-        score = 0
+        score = [0 for _ in range(16)]
         
         #upper section
         for i in range(6):
-            score += Yahtzee._diceToCount(self._score[i])[i] * i
+            score[i] = Yahtzee._diceToCount(self._score[i])[i] * (i+1)
 
-        score += 35 if score >= 63 else 0
+        score[13] = 35 if sum(score[:6]) >= 63 else 0
 
         #lower section
-        score += reduce(lambda x, y: x + y, self._score[6]) if Yahtzee._isThreeOfAKind(self._score[6]) else 0
-        score += reduce(lambda x, y: x + y, self._score[7]) if Yahtzee._isFourOfAKind(self._score[7]) else 0
-        score += 25 if (2 in Yahtzee._diceToCount(self._score[8])) and (3 in Yahtzee._diceToCount(self._score[8])) else 0
-        score += 30 if Yahtzee._isLowStraight(self._score[9]) else 0
-        score += 40 if Yahtzee._isHighStraight(self._score[10]) else 0
+        score[6] = sum(self._score[6]) if Yahtzee._isThreeOfAKind(self._score[6]) else 0
+        score[7] = sum(self._score[7]) if Yahtzee._isFourOfAKind(self._score[7]) else 0
+        score[8] = 25 if (2 in Yahtzee._diceToCount(self._score[8])) and (3 in Yahtzee._diceToCount(self._score[8])) else 0
+        score[9] = 30 if Yahtzee._isLowStraight(self._score[9]) else 0
+        score[10] = 40 if Yahtzee._isHighStraight(self._score[10]) else 0
         if 5 in Yahtzee._diceToCount(self._score[11]):
-            score += 50
+            score[11] = 50
+            score[14] = 0
             for i in range(13): #boni for multiple Yahtzees
                 if i == 11: #is the Yahtzee slot
                     continue
                 if 5 in Yahtzee._diceToCount(self._score[i]):
-                    score += 100
+                    score[14] += 100
+        score[12] = sum(self._score[12]) if self._score[12] is not None else 0
+        score[15] = sum(score)
         return score
 
     def _printScoreCard(self):
         """Prints the whole score card to stdout"""
+        score = self._getScore()
         print('\n'
               '~~~~~Score Card~~~~~\n'
               '-----Upper Section-----\n'
-              '[1]Ones \t\t{0[0]}\n'
-              '[2]Twos \t\t{0[1]}\n'
-              '[3]Threes \t\t{0[2]}\n'
-              '[4]Fours \t\t{0[3]}\n'
-              '[5]Fives \t\t{0[4]}\n'
-              '[6]Sixes \t\t{0[5]}\n'
+              '[1]Ones \t\t{0[0]} = {1[0]}\n'
+              '[2]Twos \t\t{0[1]} = {1[1]}\n'
+              '[3]Threes \t\t{0[2]} = {1[2]}\n'
+              '[4]Fours \t\t{0[3]} = {1[3]}\n'
+              '[5]Fives \t\t{0[4]} = {1[4]}\n'
+              '[6]Sixes \t\t{0[5]} = {1[5]}\n'
+              'Sum Upper Section = {2}\n'
               '\n'
               '-----Lower Section-----\n'
-              '[7]Three of a Kind \t{0[6]}\n'
-              '[8]Four of a Kind \t{0[7]}\n'
-              '[9]Full House \t\t{0[8]}\n'
-              '[10]Low Straight \t{0[9]}\n'
-              '[11]High Straight \t{0[10]}\n'
-              '[12]Yahtzee \t\t{0[11]}\n'
-              '[13]Chance \t\t{0[12]}'
+              '[7]Three of a Kind \t{0[6]} = {1[6]}\n'
+              '[8]Four of a Kind \t{0[7]} = {1[7]}\n'
+              '[9]Full House \t\t{0[8]} = {1[8]}\n'
+              '[10]Low Straight \t{0[9]} = {1[9]}\n'
+              '[11]High Straight \t{0[10]} = {1[10]}\n'
+              '[12]Yahtzee \t\t{0[11]} = {1[11]}\n'
+              '[13]Chance \t\t{0[12]} = {1[12]}\n'
+              'Sum Lower Section = {3}'
               '\n'
-              'Score: {1}'
-              ''.format(self._score, self._getScore())
+              '-----Boni-----\n'
+              'Upper Section Bonus = {1[13]}\n'
+              'Multi-Yahtzee Bonus = {1[14]}\n'
+              '\n'
+              'Total Score: {1[15]}'
+              ''.format(self._score, score, sum(score[:6]), sum(score[6:13]))
               )
 
     def run(self):
@@ -205,7 +221,7 @@ class Yahtzee:
                 print('Added to score card')
                 self._printScoreCard()
             print('The game has ended.')
-            print('The final score is {0}'.format(self._getScore()))
+            print('The final score is {0[15]}'.format(self._getScore()))
             self.running = False
         except KeyboardInterrupt:
             self.running = False
