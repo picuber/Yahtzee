@@ -206,18 +206,18 @@ class Yahtzee:
                             break
                 #thow decided, now put it onto the score card
                 self._printScoreCard()
-                print('Where do you want to score? [any number between 1 and 13]')
+                print('#{0} Where do you want to score? [any number between 1 and 13]'.format(self._dice))
                 while True: #get userInput
                     try:
                         uin = int(userInput())
                     except ValueError:
-                        print('Please enter a number between 1 and 13 inclusive')
+                        print('#{0} Please enter a number between 1 and 13 inclusive'.format(self._dice))
                         continue
                     if not 1 <= uin <= 13:
-                        print('Please enter a number between 1 and 13 inclusive')
+                        print('#{0} Please enter a number between 1 and 13 inclusive'.format(self._dice))
                         continue
                     elif self._score[uin-1] is not None:
-                        print('This box is already filled! Please choose another!')
+                        print('#{0} This box is already filled! Please choose another!'.format(self._dice))
                         continue
                     else:
                         break
