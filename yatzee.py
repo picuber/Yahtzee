@@ -168,6 +168,7 @@ class Yahtzee:
               'Multi-Yahtzee Bonus = {1[14]}\n'
               '\n'
               'Total Score: {1[15]}'
+              '~~~~~~~~~~'
               ''.format(self._score, score, sum(score[:6]), sum(score[6:13]))
               )
 
@@ -214,6 +215,9 @@ class Yahtzee:
                         continue
                     if not 1 <= uin <= 13:
                         print('Please enter a number between 1 and 13 inclusive')
+                        continue
+                    elif self._score[uin-1] is not None:
+                        print('This box is already filled! Please choose another!')
                         continue
                     else:
                         break
