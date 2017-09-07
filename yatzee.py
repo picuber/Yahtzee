@@ -197,7 +197,7 @@ class Yahtzee:
                     print('You rolled {0}'.format(self._dice))
                     if self._throws_left > 0: #Was not last throw
                         print('If you want to keep this throw just hit Enter.\n'
-                              'If you want to reroll enter the which dice to reroll. [any numbers betweet 1 and 5]\n'
+                              'If you want to reroll enter which dice to reroll. [any numbers betweet 1 and 5]\n'
                               '(Throws left: {0})'.format(self._throws_left))
                         reroll = []
                         uin = userInput()
