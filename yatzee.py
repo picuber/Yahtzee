@@ -184,7 +184,9 @@ class Yahtzee:
 
         if self.running == True:
             print('This game is already running. Wait until it\'s over or start a different game')
+            return
         try:
+            self.running = True
             print('Welcome to a game of Yahtzee!')
             for i in range(1, 14):# There are 13 rounds in a game of Yahtzee
                 print('Round {0}'.format(i))
