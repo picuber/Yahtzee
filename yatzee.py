@@ -167,8 +167,8 @@ class Yahtzee:
               'Upper Section Bonus = {1[13]}\n'
               'Multi-Yahtzee Bonus = {1[14]}\n'
               '\n'
-              'Total Score: {1[15]}'
-              '~~~~~~~~~~'
+              'Total Score: {1[15]}\n'
+              '~~~~~~~~~~~~~~~~~~~~'
               ''.format(self._score, score, sum(score[:6]), sum(score[6:13]))
               )
 
